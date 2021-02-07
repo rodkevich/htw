@@ -1,0 +1,17 @@
+# app
+app:
+  host: 0.0.0.0
+  port: 9000
+
+# postgres
+postgres:
+  user: postgres_test
+  password: postgres_test
+  database: postgres_test
+  port: 5432
+  host: postgres
+
+# redis
+redis:
+  port: 6379
+  host: redis

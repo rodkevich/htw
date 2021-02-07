@@ -1,0 +1,12 @@
+-r production.txt
+-r documentation.txt
+
+mypy
+flake8
+pytest
+pytest-cov
+pytest-aiohttp
+black
+
+aiohttp-devtools
+aiohttp-debugtoolbar

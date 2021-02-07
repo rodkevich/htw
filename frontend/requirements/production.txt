@@ -1,0 +1,16 @@
+aiohttp
+aiohttp_jinja2
+aiohttp_security[session]
+aioredis
+aiopg[sa]
+alembic
+aiojobs
+aiologstash
+aiohttp-jwt
+aiodns
+cchardet
+click
+markdown2
+psycopg2-binary
+trafaret_config
+uvloop

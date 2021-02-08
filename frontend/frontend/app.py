@@ -1,20 +1,16 @@
-from pathlib import Path
-from typing import (
-    Optional,
-    List,
-    AsyncGenerator,
-)
 from functools import partial
+from pathlib import Path
+from typing import (AsyncGenerator, List, Optional)
 
 import aiohttp_jinja2
 import aiopg.sa
-from aiohttp import web
 import aioredis
 import jinja2
+from aiohttp import web
 
+from frontend.middlewares import setup_middlewares
 from frontend.routes import init_routes
 from frontend.utils.common import init_config
-
 
 path = Path(__file__).parent
 
@@ -80,6 +76,8 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     init_config(app, config=config)
     init_routes(app)
 
+    setup_middlewares(app)
+
     app.cleanup_ctx.extend([
         redis,
         database,
@@ -94,6 +92,8 @@ async def init_gapp(config: Optional[List[str]] = None) -> web.Application:
     init_jinja2(app)
     init_config(app, config=config)
     init_routes(app)
+    setup_middlewares(app)
+
 
     app.cleanup_ctx.extend([
         redis,

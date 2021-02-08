@@ -107,9 +107,25 @@ migrate:
 	@docker exec -it $(PROJECT_NAME) alembic -n alembic:dev upgrade head;
 
 ## Runs application with development config.
-adev: wait_resources 
+adev: wait_resources
 	adev runserver ./$(PROJECT_NAME)/__main__.py -p 8080
 
 ## Runs application with specified postgres and redis.
 wait_resources:
 	python3 -m $(PROJECT_NAME).utils.wait_script
+
+clean_project:
+	rm -rf `find . -name __pycache__`
+	rm -f `find . -type f -name '*.py[co]' `
+	rm -f `find . -type f -name '*~' `
+	rm -f `find . -type f -name '.*~' `
+	rm -f `find . -type f -name '@*' `
+	rm -f `find . -type f -name '#*#' `
+	rm -f `find . -type f -name '*.orig' `
+	rm -f `find . -type f -name '*.rej' `
+	rm -f .coverage
+	rm -rf coverage
+	rm -rf build
+	rm -rf htmlcov
+	rm -rf dist
+	rm -rf .pytest_cache

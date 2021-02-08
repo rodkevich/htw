@@ -1,15 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form action="">
-        <label for="login">Login</label>
-        <input type="text" name="login">
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% set title = "Это ты что ли член?" %}
+
+{% block content %}
+  <div id="container_demo">
+    <!-- спрятанный якорь, чтобы избежать прыжков http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+    <a class="hiddenanchor" id="tosubscribe"></a>
+    <a class="hiddenanchor" id="tologin"></a>
+    <div id="wrapper">
+      <div id="login" class="animate form">
+        <form action="{{ url('authenticate') }}" method="post">
+
+          <p>
+            <label for="username" class="uname" data-icon="u"> Email</label>
+            <input id="username" name="username" required="required" type="text"
+                   placeholder="Введи мыло"/>
+          </p>
+          <p>
+            <label for="password" class="youpasswd" data-icon="p"> Password </label>
+            <input id="password" name="password" required="required" type="password"
+                   placeholder="Сюда пароль"/>
+          </p>
+          <p class="keeplogin">
+            <input type="checkbox" name="loginkeeping" id="loginkeeping"
+                   value="loginkeeping"/>
+            <label for="loginkeeping">Не пидр</label>
+          </p>
+          <p class="login button">
+            <input type="submit" value="Жми"/>
+          </p>
+          <p class="change_link">
+            Не член ?
+            <a href="#tosubscribe" class="to_subscribe">Стань им!</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

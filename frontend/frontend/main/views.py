@@ -14,7 +14,17 @@ async def index(request: web.Request) -> Dict[str, str]:
 
     return {"text": text}
 
+
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request):
+    return
 
-    return 
+
+@aiohttp_jinja2.template('base.html')
+async def base(request: web.Request):
+    pass
+
+
+@aiohttp_jinja2.template('authenticate.html')
+async def authenticate(request: web.Request):
+    return {"text": "Иди на хуй"}

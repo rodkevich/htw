@@ -18,6 +18,7 @@ def main() -> None:
     app = init_app()
     app_settings = app['config']['app']
     uvloop.install()
+
     web.run_app(
         app,
         host=app_settings['host'],

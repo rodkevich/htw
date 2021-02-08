@@ -10,6 +10,7 @@ aiohttp-jwt
 aiodns
 cchardet
 click
+gunicorn
 markdown2
 psycopg2-binary
 trafaret_config

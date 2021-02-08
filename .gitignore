@@ -1,14 +1,12 @@
 **benchmarks**
-**pytest_cache**
-.idea
+**.pytest_cache**
+**.idea**
 **installation**
-/req_docs.py
-/Dockerfile.back2
-/drivers/
-.vscode
+**.vscode**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
+**__pycache__
 *.py[cod]
 *$py.class
 

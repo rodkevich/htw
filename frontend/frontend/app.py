@@ -86,3 +86,18 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     ])
 
     return app
+
+
+async def init_gapp(config: Optional[List[str]] = None) -> web.Application:
+    app = web.Application()
+
+    init_jinja2(app)
+    init_config(app, config=config)
+    init_routes(app)
+
+    app.cleanup_ctx.extend([
+        redis,
+        database,
+    ])
+
+    return app

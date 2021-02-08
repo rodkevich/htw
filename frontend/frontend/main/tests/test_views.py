@@ -5,4 +5,4 @@ async def test_view(client: aiohttp_client) -> None:
     resp = await client.get('/')
 
     assert resp.status == 200
-    assert 'Create aio app' in await resp.text()
+    assert 'Prykhodzka learns ho to web' in await resp.text()

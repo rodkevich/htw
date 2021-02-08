@@ -13,3 +13,8 @@ async def index(request: web.Request) -> Dict[str, str]:
         text = markdown2.markdown(f.read())
 
     return {"text": text}
+
+@aiohttp_jinja2.template('login.html')
+async def login(request: web.Request):
+
+    return 

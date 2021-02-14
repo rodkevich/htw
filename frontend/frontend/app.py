@@ -77,12 +77,9 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     init_config(app, config=config)
     init_routes(app)
     setup_middlewares(app)
-    config = app["config"]["postgres"]
 
     setup_security(
-        app,
-        SessionIdentityPolicy(),
-        DBAuthorizationPolicy(aiopg.sa.create_engine(**config)),
+        app, SessionIdentityPolicy(), DBAuthorizationPolicy(database)
     )
 
     app.cleanup_ctx.extend(
@@ -103,6 +100,10 @@ async def init_gapp(config: Optional[List[str]] = None) -> web.Application:
     init_config(app, config=config)
     init_routes(app)
     setup_middlewares(app)
+
+    setup_security(
+        app, SessionIdentityPolicy(), DBAuthorizationPolicy(database)
+    )
 
     app.cleanup_ctx.extend(
         [

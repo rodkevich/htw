@@ -22,4 +22,5 @@ def init_routes(app: web.Application) -> None:
         "/static/",
         path=(PROJECT_PATH / "static"),
         name="static",
+        append_version=True,
     )

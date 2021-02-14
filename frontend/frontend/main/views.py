@@ -21,20 +21,22 @@ async def auth(request: web.Request):
     db_engine = request.app["db"]
     if await check_credentials(db_engine, login, password):
         redirect_response = web.HTTPFound("/")
+        """
+        Bug in 3.7 aiohttp
+        """
         # from aiohttp_security import remember
         # await remember(request, redirect_response, login)
         raise redirect_response
 
     else:
-        context = {"error": "Wrong credentials"}
         response = aiohttp_jinja2.render_template(
-            "login.html", request, context
+            "login.html",
+            request,
+            {"error": "Wrong credentials, dude ..."},
+            status=400,
         )
         response.headers["Content-Language"] = "eng"
         return response
-
-    # raise web.HTTPUnauthorized(
-    #     body=b'Invalid username/password combination')
 
 
 @aiohttp_jinja2.template("base.html")

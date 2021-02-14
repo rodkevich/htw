@@ -13,6 +13,20 @@ body {
 
 /* header */
 
+.login__header {
+  box-sizing: border-box;
+  height: 150px;
+  text-align: center;
+  background-color: #0b7c78;
+}
+
+.header__head {
+  margin-top: 25px;
+  font-size: 70px;
+  color: azure;
+  text-shadow: 2px 0px 2px rgba(0, 0, 0, 0.6);
+}
+
 .header {
   flex: initial;
   padding: 50px 0;

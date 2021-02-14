@@ -1,0 +1,55 @@
+.login__body {
+  background-color: #1c3d46;
+}
+
+.login__header {
+  box-sizing: border-box;
+  height: 150px;
+  text-align: center;
+  background-color: #0b7c78;
+}
+
+.header__head {
+  margin-top: 25px;
+  font-size: 70px;
+  color: azure;
+  text-shadow: 2px 0px 2px rgba(0, 0, 0, 0.6);
+}
+
+.login__email,
+.login__password {
+  width: 500px;
+  margin-left: 40%;
+  margin-bottom: 50px;
+}
+
+.login__email>.form-control,
+.login__password>.form-control {
+  width: 60%;
+}
+
+.login__email>label,
+.login__password>label,
+.change_link {
+  font-size: 30px;
+  color: azure;
+  text-shadow: 2px 0px 2px rgba(0, 0, 0, 0.6);
+}
+
+.toggle-button {
+  margin-left: 44%;
+  margin-bottom: 50px;
+}
+
+.submit__button {
+    margin-left: 40%;
+    margin-bottom: 50px;
+}
+
+.btn-danger {
+    width: 300px;
+}
+
+.change_link {
+  margin-left: 41%;
+}

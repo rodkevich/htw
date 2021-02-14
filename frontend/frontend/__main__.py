@@ -1,4 +1,3 @@
-
 import uvloop
 from aiohttp import web
 
@@ -16,15 +15,15 @@ def create_app() -> web.Application:
 
 def main() -> None:
     app = init_app()
-    app_settings = app['config']['app']
+    app_settings = app["config"]["app"]
     uvloop.install()
 
     web.run_app(
         app,
-        host=app_settings['host'],
-        port=app_settings['port'],
+        host=app_settings["host"],
+        port=app_settings["port"],
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

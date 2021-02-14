@@ -5,7 +5,7 @@ import re
 from functools import partial
 from pathlib import Path
 
-req_dir = Path('.').parent.parent / 'requirements'
+req_dir = Path(".").parent.parent / "requirements"
 pip_list = "pip list -o --format=freeze"
 
 
@@ -18,24 +18,24 @@ def upgrade_requirements() -> None:
     for req_file in req_files:
         with req_file.open() as f:
             old_req = f.read()
-            fresh_version = subprocess\
-                .check_output(
-                    pip_list,
-                    shell=True  # nosec
-                )\
-                .decode("utf-8").split("\n")
-
-            packages: Dict[str, str] = dict(
-                package.split('==')  # type: ignore
-                for package in fresh_version if package
+            fresh_version = (
+                subprocess.check_output(pip_list, shell=True)  # nosec
+                .decode("utf-8")
+                .split("\n")
             )
 
-        with req_file.open('w') as f:
+            packages: Dict[str, str] = dict(
+                package.split("==")  # type: ignore
+                for package in fresh_version
+                if package
+            )
+
+        with req_file.open("w") as f:
             new_req = old_req
             for name, version in packages.items():
                 new_req = re.sub(
-                    fr'{name}==[\d .]*',
-                    f'{name}=={version}',
+                    fr"{name}==[\d .]*",
+                    f"{name}=={version}",
                     new_req,
                 )
             f.seek(0)
@@ -49,10 +49,11 @@ def upgrade_requirements() -> None:
         echo = partial(click.echo, err=True)
         echo(
             click.style(
-                "Please rebuild your docker container with ",
-                fg='bright_green') +
-            click.style("'make build'", fg='bright_blue'))
+                "Please rebuild your docker container with ", fg="bright_green"
+            )
+            + click.style("'make build'", fg="bright_blue")
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     upgrade_requirements()

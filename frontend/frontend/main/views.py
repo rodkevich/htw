@@ -1,23 +1,40 @@
-from typing import Dict
-
 import aiohttp_jinja2
 import markdown2
 from aiohttp import web
 
 from frontend.constants import PROJECT_DIR
+from frontend.db_auth import check_credentials
 
 
 @aiohttp_jinja2.template("index.html")
-async def index(request: web.Request) -> Dict[str, str]:
+async def index(request: web.Request):
     with open(PROJECT_DIR / "README.md") as f:
         text = markdown2.markdown(f.read())
+        return {"text": text}
 
-    return {"text": text}
 
+async def auth(request: web.Request):
+    form = await request.post()
+    login = form.get("username")
+    password = form.get("password")
 
-@aiohttp_jinja2.template("login.html")
-async def login(request: web.Request):
-    return
+    db_engine = request.app["db"]
+    if await check_credentials(db_engine, login, password):
+        redirect_response = web.HTTPFound("/")
+        # from aiohttp_security import remember
+        # await remember(request, redirect_response, login)
+        raise redirect_response
+
+    else:
+        context = {"error": "Wrong credentials"}
+        response = aiohttp_jinja2.render_template(
+            "login.html", request, context
+        )
+        response.headers["Content-Language"] = "eng"
+        return response
+
+    # raise web.HTTPUnauthorized(
+    #     body=b'Invalid username/password combination')
 
 
 @aiohttp_jinja2.template("base.html")
@@ -25,6 +42,6 @@ async def base(request: web.Request):
     pass
 
 
-@aiohttp_jinja2.template("auth.html")
-async def auth(request: web.Request):
-    return {"text": "Иди на хуй"}
+@aiohttp_jinja2.template("login.html")
+async def login(request: web.Request):
+    pass

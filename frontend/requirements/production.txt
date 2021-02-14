@@ -1,6 +1,7 @@
 aiohttp
 aiohttp_jinja2
 aiohttp_security[session]
+aiohttp_security
 aioredis
 aiopg[sa]
 alembic

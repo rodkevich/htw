@@ -48,9 +48,10 @@ def init_sample_data(engine) -> None:
             .insert()\
             .values([{
                     'id': idx,
-                    'username': f'test#{idx}',
-                    'email': f'test#{idx}',
-                    'password': f'{idx}'} for idx in range(10)
+                    'login': f'test#{idx}',
+                    'is_superuser': True,
+                    'disabled': True,
+                    'passwd': f'{idx}'} for idx in range(10)
                 ])
 
         conn.execute(query)

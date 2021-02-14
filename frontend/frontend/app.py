@@ -7,7 +7,9 @@ import aiopg.sa
 import aioredis
 import jinja2
 from aiohttp import web
+from aiohttp_security import SessionIdentityPolicy, setup as setup_security
 
+from frontend.db_auth import DBAuthorizationPolicy
 from frontend.middlewares import setup_middlewares
 from frontend.routes import init_routes
 from frontend.utils.common import init_config
@@ -74,8 +76,14 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     init_jinja2(app)
     init_config(app, config=config)
     init_routes(app)
-
     setup_middlewares(app)
+    config = app["config"]["postgres"]
+
+    setup_security(
+        app,
+        SessionIdentityPolicy(),
+        DBAuthorizationPolicy(aiopg.sa.create_engine(**config)),
+    )
 
     app.cleanup_ctx.extend(
         [

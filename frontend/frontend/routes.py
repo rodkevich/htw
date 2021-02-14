@@ -2,7 +2,7 @@ import pathlib
 
 from aiohttp import web
 
-from frontend.main.views import authenticate, index
+from frontend.main.views import auth, index
 
 from frontend.main.views import login
 
@@ -15,7 +15,7 @@ def init_routes(app: web.Application) -> None:
     add_route('*', '/', index, name='index')
 
     add_route('*', '/login', login, name='login')
-    add_route('*', '/authenticate', authenticate, name='authenticate')
+    add_route('*', '/auth', auth, name='auth')
 
     # added static dir
     app.router.add_static(

@@ -25,6 +25,6 @@ async def base(request: web.Request):
     pass
 
 
-@aiohttp_jinja2.template('authenticate.html')
-async def authenticate(request: web.Request):
+@aiohttp_jinja2.template('auth.html')
+async def auth(request: web.Request):
     return {"text": "Иди на хуй"}

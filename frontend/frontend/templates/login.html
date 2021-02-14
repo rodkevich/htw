@@ -5,54 +5,57 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../static/styles/main.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+          crossorigin="anonymous">
   </script>
   <title>Это ты что ли член?</title>
 </head>
 <body class="login__body">
-
-    {% block content %}
+{% block content %}
   <header class="login__header">
-    <h1 class="header__head">Это ты что-ли член?</h1>
+    <h1 class="header__head">Log in page</h1>
   </header>
+  <div id="container_demo">
+    <!-- спрятанный якорь, чтобы избежать прыжков http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+    <a class="hiddenanchor" id="tosubscribe"></a>
+    <a class="hiddenanchor" id="tologin"></a>
+    <div id="wrapper">
+      <div id="login" class="animate__form">
+        <form class="login__form" action="{{ url('auth') }}" method="post">
 
-    <div id="container_demo">
-      <!-- спрятанный якорь, чтобы избежать прыжков http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
-      <a class="hiddenanchor" id="tosubscribe"></a>
-      <a class="hiddenanchor" id="tologin"></a>
-      <div id="wrapper">
-        <div id="login" class="animate__form">
-          <form class="login__form" action="{{ url('authenticate') }}" method="post">
-
-            <div class="login__email">
-              <label for="inputEmail4">Email</label>
-              <input type="email" class="form-control" id="inputEmail4" placeholder="Сюда мыло">
-            </div>
-            <div class="login__password">
-              <label for="inputPassword4">Password</label>
-              <input type="password" class="form-control" id="inputPassword4" placeholder="Сюда пароль">
-            </div>
-            <div class="toggle-button toggle-button--aava">
-              <input id="toggleButton" type="checkbox">
-              <label for="toggleButton" data-on-text="Не пидр" data-off-text="Пидр"></label>
-              <div class="toggle-button__icon"></div>
-            </div>
-            <div class="submit__button">
-              <button type="button" class="btn btn-danger">Ганять ва усю мошч</button>
-            </div>
-            <p class="change_link">
-              Не член ?
-              <a href="#tosubscribe" class="to_subscribe">Стань им!</a>
-            </p>
-          </form>
-        </div>
+          <p>
+            <label for="username" class="uname" data-icon="u"> Email</label>
+            <input id="username" name="username" required="required" type="text"
+                   placeholder="Name"/>
+          </p>
+          <p>
+            <label for="password" class="youpasswd" data-icon="p"> Password </label>
+            <input id="password" name="password" required="required" type="password"
+                   placeholder="Password"/>
+          </p>
+          <p class="keeplogin">
+            <input type="checkbox" name="loginkeeping" id="loginkeeping"
+                   value="loginkeeping"/>
+            <label for="loginkeeping">Remember me</label>
+          </p>
+          <p class="login button">
+            <input type="submit" value="Log in"/>
+          </p>
+          <p class="change_link">
+            Have no login?
+            <a href="#tosubscribe" class="to_subscribe">Sign in</a>
+          </p>
+        </form>
       </div>
     </div>
+  </div>
 
-    {% endblock %}
+{% endblock %}
 </body>
 </html>
 

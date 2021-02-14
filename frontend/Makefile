@@ -117,6 +117,10 @@ wait_resources:
 clean_project:
 	rm -rf `find . -name __pycache__`
 	rm -f `find . -type f -name '*.py[co]' `
+	rm -rf `find . -type d -name '*.pytest_cache'`
+	rm -rf `find . -type d -name '*.idea'`
+	rm -rf `find . -type d -name '*.vscode'`
+	rm -rf `find . -type d -name '.ipynb_checkpoints'`
 	rm -f `find . -type f -name '*~' `
 	rm -f `find . -type f -name '.*~' `
 	rm -f `find . -type f -name '@*' `
@@ -128,4 +132,3 @@ clean_project:
 	rm -rf build
 	rm -rf htmlcov
 	rm -rf dist
-	rm -rf .pytest_cache

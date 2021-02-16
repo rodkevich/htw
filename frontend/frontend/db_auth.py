@@ -70,4 +70,5 @@ async def check_credentials(db_engine, username, password):
             if user[2] == password:
                 click.echo("User verified")
                 return True
+        click.echo("User NOT verified")
         return False

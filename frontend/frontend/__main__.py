@@ -4,17 +4,17 @@ from aiohttp import web
 from .app import init_app
 
 
-def create_app() -> web.Application:
+async def create_app() -> web.Application:
     import aiohttp_debugtoolbar
 
-    app = init_app()
+    app = await init_app()
     aiohttp_debugtoolbar.setup(app, check_host=False)
 
     return app
 
 
-def main() -> None:
-    app = init_app()
+async def main() -> None:
+    app = await init_app()
     app_settings = app["config"]["app"]
     uvloop.install()
 

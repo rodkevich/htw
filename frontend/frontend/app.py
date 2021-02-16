@@ -1,13 +1,20 @@
+import base64
 from functools import partial
 from pathlib import Path
 from typing import AsyncGenerator, List, Optional
 
 import aiohttp_jinja2
+import aiohttp_security
+import aiohttp_session
 import aiopg.sa
 import aioredis
+import click
 import jinja2
 from aiohttp import web
-from aiohttp_security import SessionIdentityPolicy, setup as setup_security
+from aiohttp_security import SessionIdentityPolicy
+from aiohttp_session.cookie_storage import EncryptedCookieStorage
+from aiohttp_session.redis_storage import RedisStorage
+from cryptography import fernet
 
 from frontend.db_auth import DBAuthorizationPolicy
 from frontend.middlewares import setup_middlewares
@@ -35,6 +42,7 @@ async def database(app: web.Application) -> AsyncGenerator[None, None]:
 
     engine = await aiopg.sa.create_engine(**config)
     app["db"] = engine
+    click.echo("db")
 
     yield
 
@@ -59,6 +67,7 @@ async def redis(app: web.Application) -> None:
     app["redis_sub"] = sub
     app["redis_pub"] = pub
     app["create_redis"] = create_redis
+    click.echo("redis")
 
     yield
 
@@ -69,17 +78,41 @@ async def redis(app: web.Application) -> None:
     await app["redis_pub"].wait_closed()
 
 
-def init_app(config: Optional[List[str]] = None) -> web.Application:
+async def init_app(config: Optional[List[str]] = None) -> web.Application:
     # inbuilt developers server app
     app = web.Application()
 
-    init_jinja2(app)
     init_config(app, config=config)
+    init_jinja2(app)
     init_routes(app)
     setup_middlewares(app)
 
-    setup_security(
-        app, SessionIdentityPolicy(), DBAuthorizationPolicy(database)
+    # using session cookies as storage
+    # secret_key must be 32 url-safe base64-encoded bytes
+    # fernet_key = fernet.Fernet.generate_key()
+    # secret_key = base64.urlsafe_b64decode(fernet_key)
+    # setup session
+    # aiohttp_session.setup(
+    #     app,
+    #     EncryptedCookieStorage(
+    #         secret_key,
+    #         cookie_name="htw",
+    #     ),
+    # )
+
+    pool = await make_redis_pool(app)
+    aiohttp_session.setup(
+        app,
+        RedisStorage(
+            pool,
+            cookie_name="htw_redis"
+        )
+    )
+    # setup Identity and DB policies
+    aiohttp_security.setup(
+        app,
+        SessionIdentityPolicy(),
+        DBAuthorizationPolicy(app["config"]["postgres"]),
     )
 
     app.cleanup_ctx.extend(
@@ -92,19 +125,50 @@ def init_app(config: Optional[List[str]] = None) -> web.Application:
     return app
 
 
-async def init_gapp(config: Optional[List[str]] = None) -> web.Application:
+async def make_redis_pool(app):
+    config = app["config"]["redis"]
+    click.echo("redis_pool")
+    pool = await aioredis.create_redis_pool(
+        f'redis://{config["host"]}:{config["port"]}', db=0, timeout=1
+    )
+    return pool
+
+
+async def init_app_gcw(config: Optional[List[str]] = None) -> web.Application:
     # function to run with Gunicorn
     app = web.Application()
 
     init_jinja2(app)
     init_config(app, config=config)
-    init_routes(app)
-    setup_middlewares(app)
 
-    setup_security(
-        app, SessionIdentityPolicy(), DBAuthorizationPolicy(database)
+    pool = await make_redis_pool(app)
+    aiohttp_session.setup(
+        app,
+        RedisStorage(
+            pool,
+            cookie_name="htw_redis"
+        )
+    )
+    fernet_key = fernet.Fernet.generate_key()
+    secret_key = base64.urlsafe_b64decode(fernet_key)
+    # setup session
+    aiohttp_session.setup(
+        app,
+        EncryptedCookieStorage(
+            secret_key,
+            cookie_name="htw_redis",
+        ),
     )
 
+    # setup Identity and DB policies
+    aiohttp_security.setup(
+        app,
+        SessionIdentityPolicy(),
+        DBAuthorizationPolicy(app["config"]["postgres"]),
+    )
+
+    setup_middlewares(app)
+    init_routes(app)
     app.cleanup_ctx.extend(
         [
             redis,

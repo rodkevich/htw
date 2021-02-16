@@ -1,7 +1,10 @@
 aiohttp
 aiohttp_jinja2
 aiohttp_security[session]
+aiohttp_session[aioredis]
+aiohttp_session[secure]
 aiohttp_security
+aiohttp-session
 aioredis
 aiopg[sa]
 alembic
@@ -16,3 +19,4 @@ markdown2
 psycopg2-binary
 trafaret_config
 uvloop
+cryptography

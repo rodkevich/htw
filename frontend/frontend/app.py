@@ -101,13 +101,7 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
     # )
 
     pool = await make_redis_pool(app)
-    aiohttp_session.setup(
-        app,
-        RedisStorage(
-            pool,
-            cookie_name="htw_redis"
-        )
-    )
+    aiohttp_session.setup(app, RedisStorage(pool, cookie_name="htw_redis"))
     # setup Identity and DB policies
     aiohttp_security.setup(
         app,
@@ -142,13 +136,7 @@ async def init_app_gcw(config: Optional[List[str]] = None) -> web.Application:
     init_config(app, config=config)
 
     pool = await make_redis_pool(app)
-    aiohttp_session.setup(
-        app,
-        RedisStorage(
-            pool,
-            cookie_name="htw_redis"
-        )
-    )
+    aiohttp_session.setup(app, RedisStorage(pool, cookie_name="htw_redis"))
     fernet_key = fernet.Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
     # setup session
@@ -167,8 +155,9 @@ async def init_app_gcw(config: Optional[List[str]] = None) -> web.Application:
         DBAuthorizationPolicy(app["config"]["postgres"]),
     )
 
-    setup_middlewares(app)
+    # setup_middlewares(app)
     init_routes(app)
+
     app.cleanup_ctx.extend(
         [
             redis,

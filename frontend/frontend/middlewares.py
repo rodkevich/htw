@@ -39,3 +39,29 @@ def setup_middlewares(app):
         {404: handle_404, 500: handle_500}
     )
     app.middlewares.append(error_middleware)
+
+
+# -------------------------------------------------------------------------
+# def handle_json_error(
+#     func: Callable[[web.Request], Awaitable[web.Response]]
+# ) -> Callable[[web.Request], Awaitable[web.Response]]:
+#     async def handler(request: web.Request) -> web.Response:
+#         try:
+#             return await func(request)
+#         except asyncio.CancelledError:
+#             raise
+#         except Exception as ex:
+#             return web.json_response(
+#                 {"status": "failed", "reason": str(ex)}, status=400
+#             )
+#
+#     return handler
+#
+#
+# @web.middleware
+# async def auth_middleware(request, handler):
+#     # выполняется до обработки запроса
+#     print("temp plug : Middleware for auth session is called")
+#
+#     response = await handler(request)
+#     return web.Response(status=403, text="Auth error : not today")

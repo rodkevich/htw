@@ -2,7 +2,8 @@ import pathlib
 
 from aiohttp import web
 
-from frontend.main.views import auth, index, login, logout
+from frontend.main.views import index, login
+from frontend.main.auth import auth, logout
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 

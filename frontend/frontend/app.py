@@ -10,6 +10,7 @@ import aiopg.sa
 import aioredis
 import click
 import jinja2
+import psycopg2
 from aiohttp import web
 from aiohttp_security import SessionIdentityPolicy
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
@@ -100,6 +101,33 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
     #     ),
     # )
 
+    # Database init:
+    config = app["config"]["postgres"]
+    connection = psycopg2.connect(**config)
+    connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = connection.cursor()
+    # Check migrations existence:
+    try:
+        cursor.execute("SELECT version();")
+        record = cursor.fetchone()[0]
+        print(f"DB : {record}")
+
+        cursor.execute(
+            "SELECT version_num FROM alembic_version;"
+        )
+        record = cursor.fetchone()[0]
+        print(f"Currently active db schema version id : {record}")
+    except (Exception, psycopg2.Error) as error:
+        print(f"No alembic version available, {error}")
+    # input users and permissions:
+    try:
+        with cursor:
+            cursor.execute(open("frontend/users/sql/sample_data.sql", "r").read())
+            print(f"Users were added to DB")
+    except (Exception, psycopg2.Error) as error:
+        print(f"Users are already in DB")
+
+    # Redis pool :
     pool = await make_redis_pool(app)
     aiohttp_session.setup(app, RedisStorage(pool, cookie_name="htw_redis"))
     # setup Identity and DB policies

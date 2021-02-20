@@ -2,8 +2,8 @@ import pathlib
 
 from aiohttp import web
 
-from frontend.main.views import index, login
 from frontend.main.auth import auth, logout
+from frontend.main.views import array_constructor, index, login
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 
@@ -17,6 +17,7 @@ def init_routes(app: web.Application) -> None:
     add_route("GET", "/login", login, name="login")
     add_route("POST", "/login", auth, name="login")
     add_route("GET", "/logout", logout, name="logout")
+    add_route("*", '/array_constructor', array_constructor, name="array_constructor")
 
     # added static dir
     app.router.add_static(

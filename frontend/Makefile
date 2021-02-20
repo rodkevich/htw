@@ -119,6 +119,7 @@ clean_project:
 	rm -f `find . -type f -name '*.py[co]' `
 	rm -rf `find . -type d -name '*.pytest_cache'`
 	rm -rf `find . -type d -name '*.idea'`
+	rm -rf `find . -type d -name '*.mypy_cache'`
 	rm -rf `find . -type d -name '*.vscode'`
 	rm -rf `find . -type d -name '.ipynb_checkpoints'`
 	rm -f `find . -type f -name '*~' `

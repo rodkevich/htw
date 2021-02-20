@@ -40,3 +40,8 @@ async def login(request: web.Request):
         )
         response.headers["Content-Language"] = "eng"
         return response
+
+
+@aiohttp_jinja2.template("array_constructor.html")
+async def array_constructor(request):
+    pass

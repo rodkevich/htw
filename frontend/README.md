@@ -118,6 +118,8 @@ Apply migrations:
 
 ```
 make migrate # the command can be executed only if the server is running e.g. after `make run`
+
+docker exec -it frontend alembic -n alembic:dev upgrade head;
 ```
 
 If u want to create a new file with tables u should import tables to `frontend/migrations/env.py`

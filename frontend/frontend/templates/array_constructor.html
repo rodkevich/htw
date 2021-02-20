@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% set title = "Array constructor" %}
+
+{% block content %}
+
+<main class="main">
+    <div class="constructor">
+        <form class="constructor__form" action="#">
+            <fieldset>
+                <input class="form__input__length" type="text" name="length" id="length">
+                <label for="length">Введи желаемое количество элементов в массиве</label>
+                <input class="form__input__quantity" type="text" name="quantity" id="quantity">
+                <label for="quantity">Ведите желаемое количество элементов в подмассиве</label>
+                <button>Расчитать</button>
+            </fieldset>
+        </form>
+
+        <div class="constructor__output"></div>
+    </div>
+</main>
+
+{% endblock %}

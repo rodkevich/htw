@@ -22,7 +22,7 @@ ___
 - alembic
 - aiopg
 - sqlAlchemy
-
+- sonarcube 
 
 ## Local development
 All the development settings are stored in `/config/api.dev.yml`.
@@ -38,6 +38,23 @@ or just
 
 ```
 make
+```
+To start the sonarcube server, run the following command:
+
+```
+make sonar_build
+```
+
+to run existing :
+
+```
+make sonar_run
+```
+
+to run sonar test :
+
+```
+make sonar_test
 ```
 
 To stop docker containers:

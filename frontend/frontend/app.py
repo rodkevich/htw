@@ -3,24 +3,23 @@ from functools import partial
 from pathlib import Path
 from typing import AsyncGenerator, List, Optional
 
-import aiohttp_jinja2
 import aiohttp_security
 import aiohttp_session
 import aiopg.sa
 import aioredis
 import click
-import jinja2
 import psycopg2
 from aiohttp import web
+from aiohttp_jinja2 import setup as j2_setup
 from aiohttp_security import SessionIdentityPolicy
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from aiohttp_session.redis_storage import RedisStorage
 from cryptography import fernet
-
 from frontend.db_auth import DBAuthorizationPolicy
 from frontend.middlewares import setup_middlewares
 from frontend.routes import init_routes
 from frontend.utils.common import init_config
+from jinja2 import FileSystemLoader as J2_fs_loader
 
 path = Path(__file__).parent
 
@@ -29,9 +28,7 @@ def init_jinja2(app: web.Application) -> None:
     """
     Initialize jinja2 template for application.
     """
-    aiohttp_jinja2.setup(
-        app, loader=jinja2.FileSystemLoader(str(path / "templates"))
-    )
+    j2_setup(app, loader=J2_fs_loader(str(path / "templates")))
 
 
 async def database(app: web.Application) -> AsyncGenerator[None, None]:
@@ -104,7 +101,9 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
     # Database init:
     config = app["config"]["postgres"]
     connection = psycopg2.connect(**config)
-    connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    connection.set_isolation_level(
+        psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
+    )
     cursor = connection.cursor()
     # Check migrations existence:
     try:
@@ -112,9 +111,7 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
         record = cursor.fetchone()[0]
         print(f"DB : {record}")
 
-        cursor.execute(
-            "SELECT version_num FROM alembic_version;"
-        )
+        cursor.execute("SELECT version_num FROM alembic_version;")
         record = cursor.fetchone()[0]
         print(f"Currently active db schema version id : {record}")
     except (Exception, psycopg2.Error) as error:
@@ -122,10 +119,12 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
     # input users and permissions:
     try:
         with cursor:
-            cursor.execute(open("frontend/users/sql/sample_data.sql", "r").read())
-            print(f"Users were added to DB")
-    except (Exception, psycopg2.Error) as error:
-        print(f"Users are already in DB")
+            cursor.execute(
+                open("frontend/users/sql/sample_data.sql", "r").read()
+            )
+            print("Users were added to DB")
+    except (Exception, psycopg2.Error):
+        print("Users are already in DB")
 
     # Redis pool :
     pool = await make_redis_pool(app)

@@ -17,7 +17,9 @@ def init_routes(app: web.Application) -> None:
     add_route("GET", "/login", login, name="login")
     add_route("POST", "/login", auth, name="login")
     add_route("GET", "/logout", logout, name="logout")
-    add_route("*", '/array_constructor', array_constructor, name="array_constructor")
+    add_route(
+        "*", "/array_constructor", array_constructor, name="array_constructor"
+    )
 
     # added static dir
     app.router.add_static(

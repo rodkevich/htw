@@ -133,3 +133,16 @@ clean_project:
 	rm -rf build
 	rm -rf htmlcov
 	rm -rf dist
+
+sonar_build:
+	@docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
+
+sonar_run:
+	@docker container start sonarqube
+
+sonar_test:
+	@/home/ioan/Desktop/sonar/sonar-scanner-4.6.0.2311-linux/bin/sonar-scanner \
+  -Dsonar.projectKey=htw \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=4171fa19598fe3e02e67d27997e744cd8984793f

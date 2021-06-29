@@ -48,3 +48,4 @@ services:
       - 8082:8082
     entrypoint: py.test -v -p no:warnings
     command: ''
+

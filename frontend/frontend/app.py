@@ -14,12 +14,14 @@ from aiohttp_jinja2 import setup as j2_setup
 from aiohttp_security import SessionIdentityPolicy
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from aiohttp_session.redis_storage import RedisStorage
+from aioredis import Redis
 from cryptography import fernet
+from jinja2 import FileSystemLoader as J2_fs_loader
+
 from frontend.db_auth import DBAuthorizationPolicy
 from frontend.middlewares import setup_middlewares
 from frontend.routes import init_routes
 from frontend.utils.common import init_config
-from jinja2 import FileSystemLoader as J2_fs_loader
 
 path = Path(__file__).parent
 
@@ -48,7 +50,7 @@ async def database(app: web.Application) -> AsyncGenerator[None, None]:
     await app["db"].wait_closed()
 
 
-async def redis(app: web.Application) -> None:
+async def redis(app: web.Application) -> AsyncGenerator[None, None]:
     """
     A function that, when the server is started, connects to redis,
     and after stopping it breaks the connection (after yield)
@@ -74,6 +76,15 @@ async def redis(app: web.Application) -> None:
 
     await app["redis_sub"].wait_closed()
     await app["redis_pub"].wait_closed()
+
+
+async def make_redis_pool(app) -> Redis:
+    config = app["config"]["redis"]
+    click.echo("redis_pool")
+    pool = await aioredis.create_redis_pool(
+        f'redis://{config["host"]}:{config["port"]}', db=0, timeout=1
+    )
+    return pool
 
 
 async def init_app(config: Optional[List[str]] = None) -> web.Application:
@@ -146,15 +157,6 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
     return app
 
 
-async def make_redis_pool(app):
-    config = app["config"]["redis"]
-    click.echo("redis_pool")
-    pool = await aioredis.create_redis_pool(
-        f'redis://{config["host"]}:{config["port"]}', db=0, timeout=1
-    )
-    return pool
-
-
 async def init_app_gcw(config: Optional[List[str]] = None) -> web.Application:
     # function to run with Gunicorn
     app = web.Application()
@@ -193,3 +195,5 @@ async def init_app_gcw(config: Optional[List[str]] = None) -> web.Application:
     )
 
     return app
+
+
